@@ -4,8 +4,8 @@ import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Road Green - Hệ thống tối ưu hóa giao hàng',
+  description: 'Ứng dụng tối ưu hóa tuyến đường giao hàng với tích hợp VietMap API',
   generator: 'v0.dev',
 }
 

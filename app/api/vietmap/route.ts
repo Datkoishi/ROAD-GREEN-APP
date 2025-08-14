@@ -28,7 +28,7 @@ function validateCoordinates(lat: number, lng: number): boolean {
 }
 
 function validateVehicle(vehicle: string): boolean {
-  const validVehicles = ['car', 'motorbike', 'bike', 'truck']
+  const validVehicles = ['car', 'motorcycle', 'bike', 'truck']
   return validVehicles.includes(vehicle)
 }
 
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
     if (!validateVehicle(vehicle)) {
       return NextResponse.json({
         success: false,
-        error: 'Invalid vehicle type. Supported: car, motorbike, bike, truck',
+        error: 'Invalid vehicle type. Supported: car, motorcycle, bike, truck',
         timestamp: new Date().toISOString()
       }, { status: 400 })
     }

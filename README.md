@@ -9,14 +9,39 @@
 - **Hướng dẫn chi tiết**: Hiển thị từng bước đi với tên đường và khoảng cách
 - **Đa tuyến đường**: Hỗ trợ nhiều tuyến đường thay thế
 - **Thông tin thời gian thực**: Khoảng cách, thời gian di chuyển, phương tiện
+- **Tìm kiếm địa chỉ**: Chuyển đổi địa chỉ thực tế thành tọa độ
+- **Geocoding API**: Tích hợp API tìm kiếm địa chỉ với autocomplete
 
-### 2. Giao diện người dùng
-- **Bản đồ trực quan**: Hiển thị tuyến đường trên bản đồ đơn giản
+### 2. Khắc phục lỗi SSR và React Hooks
+- **Dynamic Imports**: Sử dụng `next/dynamic` với `ssr: false`
+- **Client-side Rendering**: Đảm bảo Leaflet chỉ chạy ở browser
+- **Loading States**: Trải nghiệm mượt mà khi tải bản đồ
+- **Error Prevention**: Tránh lỗi `window is not defined` trong SSR
+- **Rules of Hooks**: Tuân thủ nghiêm ngặt Rules of Hooks của React
+- **Hook Order**: Đảm bảo hooks luôn được gọi theo thứ tự nhất quán
+
+### 3. Bản đồ thực tế
+- **Interactive Map**: Bản đồ tương tác với tiles từ VietMap
+- **Real-time Route Display**: Hiển thị tuyến đường thực tế trên bản đồ
+- **Route Visualization**: Hiển thị đường đi với custom markers và polylines
+- **Map Controls**: Giao diện điều khiển để nhập điểm xuất phát/đích
+- **Address Search**: Tìm kiếm địa chỉ với autocomplete và geocoding
+- **Preset Routes**: Tuyến đường mẫu cho các quận TP.HCM
+- **Route Statistics**: Thống kê chi tiết tuyến đường với biểu đồ
+- **Detailed Instructions**: Hướng dẫn từng bước đi với biểu tượng hướng
+- **SSR Compatibility**: Khắc phục lỗi server-side rendering với Leaflet
+- **Hooks Compliance**: Tuân thủ Rules of Hooks để tránh lỗi runtime
+
+### 4. Giao diện người dùng
+- **Bản đồ trực quan**: Hiển thị tuyến đường trên bản đồ thực tế
 - **Hướng dẫn chi tiết**: Danh sách từng bước đi với biểu tượng hướng
-- **Thống kê tổng quan**: Thông tin hoạt động giao hàng
+- **Thống kê tuyến đường**: Phân tích chi tiết với biểu đồ và metrics
+- **Điều khiển tương tác**: Giao diện nhập điểm và chọn phương tiện
+- **Tìm kiếm địa chỉ**: Nhập địa chỉ thực tế thay vì tọa độ
+- **Autocomplete**: Gợi ý địa chỉ thông minh khi nhập
 - **Responsive design**: Tương thích với mọi thiết bị
 
-### 3. Quản lý dữ liệu
+### 5. Quản lý dữ liệu
 - **Database MySQL**: Lưu trữ thông tin người dùng, khách hàng, đơn hàng
 - **API endpoints**: RESTful API cho các chức năng chính
 - **Real-time updates**: Cập nhật dữ liệu thời gian thực
@@ -28,6 +53,7 @@
 - **Backend**: Next.js API Routes
 - **Database**: MySQL
 - **Maps API**: VietMap API
+- **Map Library**: Leaflet, React-Leaflet
 - **Icons**: Lucide React
 - **Security**: Rate limiting, Input validation, Environment variables
 
