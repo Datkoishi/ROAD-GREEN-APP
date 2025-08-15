@@ -274,15 +274,7 @@ export default function RouteDetails({ routeData, selectedRoute, onRouteChange, 
           </div>
         </div>
 
-        {/* API Info */}
-        <div className="pt-2 border-t">
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>Dữ liệu từ VietMap API</span>
-            <Badge variant="outline" className="text-xs">
-              {routeData.license}
-            </Badge>
-          </div>
-        </div>
+
       </CardContent>
     </Card>
   )

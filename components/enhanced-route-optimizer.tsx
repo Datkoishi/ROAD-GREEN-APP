@@ -316,7 +316,7 @@ export default function EnhancedRouteOptimizer() {
                 <strong>Tổng quãng đường:</strong>{" "}
                 {(optimizedRoute.reduce((sum, route) => sum + route.distance, 0) / 1000).toFixed(1)} km
                 <br />
-                <strong>Được tối ưu bởi:</strong> VietMap API với dữ liệu giao thông thực tế
+                <strong>Được tối ưu bởi:</strong> Hệ thống thông minh với dữ liệu giao thông thực tế
               </div>
             </div>
           </CardContent>

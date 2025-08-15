@@ -41,7 +41,7 @@ export default function DriverDashboardPage() {
   }
 
   const handleGoToMainApp = () => {
-    router.push('/dashboard')
+    router.push('/')
   }
 
   if (!userData) {

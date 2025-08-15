@@ -129,18 +129,19 @@ export default function ManagerDashboard() {
     }
   }
 
-  const getRatingStars = (rating: number) => {
+  const getRatingStars = (rating: any) => {
+    const ratingNumber = parseFloat(String(rating)) || 0
     return (
       <div className="flex items-center space-x-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
             className={`h-4 w-4 ${
-              star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+              star <= ratingNumber ? 'text-yellow-400 fill-current' : 'text-gray-300'
             }`}
           />
         ))}
-        <span className="text-sm text-gray-600 ml-1">({rating.toFixed(1)})</span>
+        <span className="text-sm text-gray-600 ml-1">({ratingNumber.toFixed(1)})</span>
       </div>
     )
   }
@@ -236,7 +237,7 @@ export default function ManagerDashboard() {
                 <div>
                   <p className="text-sm text-gray-600">Đánh giá trung bình</p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {deliveryStats.average_rating.toFixed(1)}
+                    {(parseFloat(String(deliveryStats.average_rating)) || 0).toFixed(1)}
                   </p>
                   <p className="text-xs text-yellow-600">
                     {deliveryStats.total_points} điểm tích lũy
@@ -456,7 +457,7 @@ export default function ManagerDashboard() {
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Đánh giá trung bình:</span>
                       <span className="font-medium">
-                        {deliveryStats?.average_rating.toFixed(1) || '0.0'}/5.0
+                        {(parseFloat(String(deliveryStats?.average_rating)) || 0).toFixed(1)}/5.0
                       </span>
                     </div>
                   </div>

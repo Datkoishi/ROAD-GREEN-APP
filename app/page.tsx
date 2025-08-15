@@ -46,7 +46,7 @@ import AddressSearchInfo from "@/components/address-search-info"
 import SecurityInfo from "@/components/security-info"
 import EnhancedDashboard from "@/components/enhanced-dashboard"
 import QuickStats from "@/components/quick-stats"
-import VietMapFeatures from "@/components/vietmap-features"
+
 import AuthButtons from "@/components/auth-buttons"
 import Logo from "@/components/logo"
 
@@ -116,16 +116,7 @@ export default function Dashboard() {
       gradient: "from-indigo-50 to-purple-100",
       active: activeFeature === "analytics"
     },
-    {
-      id: "vietmap-features",
-      title: "VietMap API",
-      description: "Tất cả tính năng VietMap",
-      icon: Navigation,
-      color: "text-teal-600",
-      bgColor: "bg-gradient-to-br from-teal-500 to-cyan-600",
-      gradient: "from-teal-50 to-cyan-100",
-      active: activeFeature === "vietmap-features"
-    }
+
   ]
 
   const Sidebar = () => (
@@ -209,7 +200,7 @@ export default function Dashboard() {
               {activeFeature ? navigationItems.find(item => item.id === activeFeature)?.title : 'Bản đồ chỉ đường'}
             </h1>
             <p className="text-sm text-gray-500 font-medium">
-              {activeFeature ? navigationItems.find(item => item.id === activeFeature)?.description : 'Tìm tuyến đường tối ưu với VietMap API thực tế'}
+              {activeFeature ? navigationItems.find(item => item.id === activeFeature)?.description : 'Tìm tuyến đường tối ưu với hệ thống thông minh'}
             </p>
           </div>
         </div>
@@ -263,7 +254,7 @@ export default function Dashboard() {
                   </Card>
                 </div>
               )}
-              {activeFeature === "vietmap-features" && <VietMapFeatures />}
+
             </div>
         </main>
         </div>

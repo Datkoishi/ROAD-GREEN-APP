@@ -20,17 +20,7 @@ export default function QuickStats({ userScore }: QuickStatsProps) {
       gradient: "from-blue-50 via-blue-100 to-indigo-50",
       description: "Đơn hàng đã giao hôm nay"
     },
-    {
-      title: "VietMap API",
-      value: "7 APIs",
-      change: "Active",
-      changeType: "positive",
-      icon: MapPin,
-      color: "text-green-600",
-      bgColor: "bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700",
-      gradient: "from-green-50 via-emerald-100 to-teal-50",
-      description: "Tích hợp đầy đủ VietMap"
-    },
+
     {
       title: "Thời gian",
       value: "6.5h",

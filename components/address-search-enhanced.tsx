@@ -404,7 +404,7 @@ export default function AddressSearchEnhanced({ onRouteChange, loading = false, 
           </span>
         </CardTitle>
         <CardDescription>
-          Nhập địa chỉ thực tế để tìm tuyến đường tối ưu với VietMap API
+          Nhập địa chỉ thực tế để tìm tuyến đường tối ưu
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6 space-y-4">

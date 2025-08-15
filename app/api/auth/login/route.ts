@@ -127,33 +127,32 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: {
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          full_name: user.full_name,
-          phone: user.phone,
-          vehicle_type: user.vehicle_type,
-          points: user.points,
-          total_deliveries: user.total_deliveries,
-          rating: user.rating,
-          status: user.status,
-          last_location_lat: user.last_location_lat,
-          last_location_lng: user.last_location_lng,
-          last_location_update: user.last_location_update,
-          created_at: user.created_at
-        },
-        token,
-        stats: {
-          today_deliveries: todayDeliveries[0]?.count || 0,
-          total_deliveries: user.total_deliveries,
-          total_distance: distanceResult[0]?.total_distance || 0,
-          rating: user.rating,
-          points: user.points
-        },
-        recent_feedback: recentFeedback
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        full_name: user.full_name,
+        phone: user.phone,
+        vehicle_type: user.vehicle_type,
+        points: user.points,
+        total_deliveries: user.total_deliveries,
+        rating: user.rating,
+        status: user.status,
+        role: user.role || 'driver',
+        last_location_lat: user.last_location_lat,
+        last_location_lng: user.last_location_lng,
+        last_location_update: user.last_location_update,
+        created_at: user.created_at
       },
+      token,
+      stats: {
+        today_deliveries: todayDeliveries[0]?.count || 0,
+        total_deliveries: user.total_deliveries,
+        total_distance: distanceResult[0]?.total_distance || 0,
+        rating: user.rating,
+        points: user.points
+      },
+      recent_feedback: recentFeedback,
       message: "Đăng nhập thành công"
     })
 

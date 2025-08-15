@@ -101,18 +101,19 @@ export default function DriverDashboard() {
     }
   }
 
-  const getRatingStars = (rating: number) => {
+  const getRatingStars = (rating: any) => {
+    const ratingNumber = parseFloat(rating) || 0
     return (
       <div className="flex items-center space-x-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
             className={`h-4 w-4 ${
-              star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+              star <= ratingNumber ? 'text-yellow-400 fill-current' : 'text-gray-300'
             }`}
           />
         ))}
-        <span className="text-sm text-gray-600 ml-1">({rating.toFixed(1)})</span>
+        <span className="text-sm text-gray-600 ml-1">({ratingNumber.toFixed(1)})</span>
       </div>
     )
   }
@@ -280,7 +281,7 @@ export default function DriverDashboard() {
             <Button 
               variant="outline" 
               className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-blue-50 hover:border-blue-300 transition-all"
-              onClick={() => window.location.href = '/dashboard'}
+              onClick={() => window.location.href = '/'}
             >
               <Navigation className="h-6 w-6 text-blue-600" />
               <span className="text-sm font-medium">Bản đồ chỉ đường</span>
@@ -289,25 +290,18 @@ export default function DriverDashboard() {
             <Button 
               variant="outline" 
               className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-green-50 hover:border-green-300 transition-all"
-              onClick={() => window.location.href = '/dashboard?feature=route-optimizer'}
+              onClick={() => window.location.href = '/?feature=route-optimizer'}
             >
               <Route className="h-6 w-6 text-green-600" />
               <span className="text-sm font-medium">Tối ưu tuyến đường</span>
             </Button>
 
-            <Button 
-              variant="outline" 
-              className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-purple-50 hover:border-purple-300 transition-all"
-              onClick={() => window.location.href = '/dashboard?feature=vietmap-features'}
-            >
-              <Target className="h-6 w-6 text-purple-600" />
-              <span className="text-sm font-medium">VietMap API</span>
-            </Button>
+
 
             <Button 
               variant="outline" 
               className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-orange-50 hover:border-orange-300 transition-all"
-              onClick={() => window.location.href = '/dashboard?feature=traffic-reporter'}
+              onClick={() => window.location.href = '/?feature=traffic-reporter'}
             >
               <AlertTriangle className="h-6 w-6 text-orange-600" />
               <span className="text-sm font-medium">Báo cáo giao thông</span>
@@ -316,7 +310,7 @@ export default function DriverDashboard() {
             <Button 
               variant="outline" 
               className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-indigo-50 hover:border-indigo-300 transition-all"
-              onClick={() => window.location.href = '/dashboard?feature=customer-manager'}
+              onClick={() => window.location.href = '/?feature=customer-manager'}
             >
               <MessageSquare className="h-6 w-6 text-indigo-600" />
               <span className="text-sm font-medium">Quản lý khách hàng</span>
@@ -325,7 +319,7 @@ export default function DriverDashboard() {
             <Button 
               variant="outline" 
               className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-teal-50 hover:border-teal-300 transition-all"
-              onClick={() => window.location.href = '/dashboard?feature=analytics'}
+              onClick={() => window.location.href = '/?feature=analytics'}
             >
               <TrendingUp className="h-6 w-6 text-teal-600" />
               <span className="text-sm font-medium">Thống kê cá nhân</span>
@@ -406,7 +400,7 @@ export default function DriverDashboard() {
             
             <div className="text-center p-4 bg-yellow-50 rounded-lg">
               <div className="text-3xl font-bold text-yellow-600 mb-2">
-                {driverStats.rating.toFixed(1)}
+                {(parseFloat(String(driverStats.rating)) || 0).toFixed(1)}
               </div>
               <p className="text-sm text-gray-600">Đánh giá trung bình</p>
             </div>
