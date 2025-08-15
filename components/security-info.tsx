@@ -13,7 +13,7 @@ export default function SecurityInfo() {
           <span>Bảo mật API VietMap</span>
         </CardTitle>
         <CardDescription className="text-orange-700">
-          Hướng dẫn sử dụng API an toàn theo tiêu chuẩn VietMap
+          Bảo mật VietMap API đã được triển khai trong toàn bộ ứng dụng
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -26,7 +26,7 @@ export default function SecurityInfo() {
             <ul className="space-y-2 text-sm text-orange-700">
               <li className="flex items-start space-x-2">
                 <Server className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                <span>Backend proxy server bảo vệ API key</span>
+                <span>Backend proxy server bảo vệ VietMap API key</span>
               </li>
               <li className="flex items-start space-x-2">
                 <Lock className="h-3 w-3 mt-0.5 flex-shrink-0" />
@@ -34,7 +34,11 @@ export default function SecurityInfo() {
               </li>
               <li className="flex items-start space-x-2">
                 <Shield className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                <span>Rate limiting và input validation</span>
+                <span>Rate limiting và input validation cho tất cả API</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <CheckCircle className="h-3 w-3 mt-0.5 flex-shrink-0" />
+                <span>Đã tích hợp vào Bản đồ chỉ đường chính</span>
               </li>
             </ul>
           </div>

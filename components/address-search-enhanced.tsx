@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MapPin, Navigation, Search, Loader2, Map, Route, Sparkles, Target, Zap } from "lucide-react"
+import { MapPin, Navigation, Search, Loader2, Map, Route, Sparkles, Target, Zap, Clock, Star } from "lucide-react"
 
 interface GeocodeResult {
   place_id: string
@@ -32,7 +32,7 @@ interface AddressSearchProps {
   compact?: boolean
 }
 
-export default function AddressSearch({ onRouteChange, loading = false, compact = false }: AddressSearchProps) {
+export default function AddressSearchEnhanced({ onRouteChange, loading = false, compact = false }: AddressSearchProps) {
   const [startAddress, setStartAddress] = useState("")
   const [endAddress, setEndAddress] = useState("")
   const [vehicle, setVehicle] = useState("car")
@@ -56,7 +56,7 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
       clearTimeout(startTimeoutRef.current)
     }
 
-    if (startAddress.trim().length < 3) {
+    if (startAddress.trim().length < 2) {
       setStartResults([])
       setShowStartDropdown(false)
       return
@@ -64,7 +64,7 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
 
     startTimeoutRef.current = setTimeout(() => {
       searchAddress(startAddress, 'start')
-    }, 500)
+    }, 300) // Giảm delay để responsive hơn
 
     return () => {
       if (startTimeoutRef.current) {
@@ -79,7 +79,7 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
       clearTimeout(endTimeoutRef.current)
     }
 
-    if (endAddress.trim().length < 3) {
+    if (endAddress.trim().length < 2) {
       setEndResults([])
       setShowEndDropdown(false)
       return
@@ -87,7 +87,7 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
 
     endTimeoutRef.current = setTimeout(() => {
       searchAddress(endAddress, 'end')
-    }, 500)
+    }, 300)
 
     return () => {
       if (endTimeoutRef.current) {
@@ -104,23 +104,46 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
         setSearchingEnd(true)
       }
 
+      console.log(`Searching for: ${address}`)
+      
       // Sử dụng VietMap Autocomplete API cho gợi ý địa chỉ real-time
       const response = await fetch(`/api/map/autocomplete?query=${encodeURIComponent(address)}&limit=8`)
       const result = await response.json()
 
+      console.log('API Response:', result)
+
       if (result.success) {
+        const data = Array.isArray(result.data) ? result.data : []
+        console.log(`Found ${data.length} results for ${address}`)
+        
         if (type === 'start') {
-          setStartResults(result.data || [])
-          setShowStartDropdown(true)
+          setStartResults(data)
+          setShowStartDropdown(data.length > 0)
         } else {
-          setEndResults(result.data || [])
-          setShowEndDropdown(true)
+          setEndResults(data)
+          setShowEndDropdown(data.length > 0)
         }
       } else {
         console.error('VietMap Autocomplete error:', result.error)
+        // Set empty results on error
+        if (type === 'start') {
+          setStartResults([])
+          setShowStartDropdown(false)
+        } else {
+          setEndResults([])
+          setShowEndDropdown(false)
+        }
       }
     } catch (error) {
       console.error('Search error:', error)
+      // Set empty results on error
+      if (type === 'start') {
+        setStartResults([])
+        setShowStartDropdown(false)
+      } else {
+        setEndResults([])
+        setShowEndDropdown(false)
+      }
     } finally {
       if (type === 'start') {
         setSearchingStart(false)
@@ -147,6 +170,27 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
       const point1 = `${selectedStart.lat},${selectedStart.lon}`
       const point2 = `${selectedEnd.lat},${selectedEnd.lon}`
       onRouteChange(point1, point2, vehicle)
+    }
+  }
+
+  const getAddressDisplay = (result: GeocodeResult) => {
+    const parts = []
+    if (result.address?.road) parts.push(result.address.road)
+    if (result.address?.district) parts.push(result.address.district)
+    if (result.address?.city) parts.push(result.address.city)
+    return parts.join(', ')
+  }
+
+  const getAddressTypeIcon = (type: string) => {
+    switch (type) {
+      case 'restaurant': return '🍽️'
+      case 'hotel': return '🏨'
+      case 'hospital': return '🏥'
+      case 'school': return '🏫'
+      case 'bank': return '🏦'
+      case 'shopping': return '🛍️'
+      case 'gas_station': return '⛽'
+      default: return '📍'
     }
   }
 
@@ -204,12 +248,29 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
               <div className="absolute z-10 w-full mt-1 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in slide-in-from-top-2 duration-300">
                 {startResults.map((result, index) => (
                   <button
-                    key={index}
+                    key={result.place_id || index}
                     className="w-full text-left px-4 py-3 hover:bg-green-50 border-b border-gray-100 last:border-b-0 transition-colors duration-200"
                     onClick={() => handleStartSelect(result)}
                   >
-                    <div className="font-medium text-sm text-gray-900">{result.display_name}</div>
-                    <div className="text-xs text-gray-500">{result.type}</div>
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                        <span className="text-sm">{getAddressTypeIcon(result.type)}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-gray-900 truncate">{result.display_name}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {getAddressDisplay(result)}
+                        </div>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <div className="flex items-center space-x-1">
+                            <Star className="h-3 w-3 text-yellow-500" />
+                            <span className="text-xs text-gray-400">{result.importance > 0.5 ? 'Nổi bật' : 'Thường'}</span>
+                          </div>
+                          <span className="text-xs text-gray-400">•</span>
+                          <span className="text-xs text-gray-400 capitalize">{result.type}</span>
+                        </div>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -240,12 +301,29 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
               <div className="absolute z-10 w-full mt-1 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in slide-in-from-top-2 duration-300">
                 {endResults.map((result, index) => (
                   <button
-                    key={index}
+                    key={result.place_id || index}
                     className="w-full text-left px-4 py-3 hover:bg-red-50 border-b border-gray-100 last:border-b-0 transition-colors duration-200"
                     onClick={() => handleEndSelect(result)}
                   >
-                    <div className="font-medium text-sm text-gray-900">{result.display_name}</div>
-                    <div className="text-xs text-gray-500">{result.type}</div>
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mt-0.5">
+                        <span className="text-sm">{getAddressTypeIcon(result.type)}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-gray-900 truncate">{result.display_name}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {getAddressDisplay(result)}
+                        </div>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <div className="flex items-center space-x-1">
+                            <Star className="h-3 w-3 text-yellow-500" />
+                            <span className="text-xs text-gray-400">{result.importance > 0.5 ? 'Nổi bật' : 'Thường'}</span>
+                          </div>
+                          <span className="text-xs text-gray-400">•</span>
+                          <span className="text-xs text-gray-400 capitalize">{result.type}</span>
+                        </div>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -326,7 +404,7 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
           </span>
         </CardTitle>
         <CardDescription>
-          Nhập địa chỉ thực tế để tìm tuyến đường tối ưu
+          Nhập địa chỉ thực tế để tìm tuyến đường tối ưu với VietMap API
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6 space-y-4">
@@ -353,12 +431,29 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
               <div className="absolute z-10 w-full mt-1 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in slide-in-from-top-2 duration-300">
                 {startResults.map((result, index) => (
                   <button
-                    key={index}
+                    key={result.place_id || index}
                     className="w-full text-left px-4 py-3 hover:bg-green-50 border-b border-gray-100 last:border-b-0 transition-colors duration-200"
                     onClick={() => handleStartSelect(result)}
                   >
-                    <div className="font-medium text-sm text-gray-900">{result.display_name}</div>
-                    <div className="text-xs text-gray-500">{result.type}</div>
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                        <span className="text-lg">{getAddressTypeIcon(result.type)}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-gray-900 truncate">{result.display_name}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {getAddressDisplay(result)}
+                        </div>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <div className="flex items-center space-x-1">
+                            <Star className="h-3 w-3 text-yellow-500" />
+                            <span className="text-xs text-gray-400">{result.importance > 0.5 ? 'Địa điểm nổi bật' : 'Địa điểm thường'}</span>
+                          </div>
+                          <span className="text-xs text-gray-400">•</span>
+                          <span className="text-xs text-gray-400 capitalize">{result.type}</span>
+                        </div>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -389,12 +484,29 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
               <div className="absolute z-10 w-full mt-1 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto animate-in slide-in-from-top-2 duration-300">
                 {endResults.map((result, index) => (
                   <button
-                    key={index}
+                    key={result.place_id || index}
                     className="w-full text-left px-4 py-3 hover:bg-red-50 border-b border-gray-100 last:border-b-0 transition-colors duration-200"
                     onClick={() => handleEndSelect(result)}
                   >
-                    <div className="font-medium text-sm text-gray-900">{result.display_name}</div>
-                    <div className="text-xs text-gray-500">{result.type}</div>
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mt-0.5">
+                        <span className="text-lg">{getAddressTypeIcon(result.type)}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-gray-900 truncate">{result.display_name}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {getAddressDisplay(result)}
+                        </div>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <div className="flex items-center space-x-1">
+                            <Star className="h-3 w-3 text-yellow-500" />
+                            <span className="text-xs text-gray-400">{result.importance > 0.5 ? 'Địa điểm nổi bật' : 'Địa điểm thường'}</span>
+                          </div>
+                          <span className="text-xs text-gray-400">•</span>
+                          <span className="text-xs text-gray-400 capitalize">{result.type}</span>
+                        </div>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -483,8 +595,9 @@ export default function AddressSearch({ onRouteChange, loading = false, compact 
         <div className="text-xs text-gray-500 space-y-1 p-3 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200/50">
           <p><strong>Hướng dẫn:</strong></p>
           <p>• Nhập địa chỉ thực tế (ví dụ: "Bến Thành, Quận 1")</p>
-          <p>• Chọn địa chỉ chính xác từ danh sách gợi ý</p>
+          <p>• Chọn địa chỉ chính xác từ danh sách gợi ý VietMap</p>
           <p>• Hoặc sử dụng địa chỉ mẫu có sẵn</p>
+          <p>• Autocomplete real-time với độ chính xác cao</p>
         </div>
       </CardContent>
     </Card>

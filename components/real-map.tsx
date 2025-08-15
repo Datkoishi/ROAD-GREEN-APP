@@ -125,7 +125,9 @@ export default function RealMap({
   vehicle = "car",
   onRouteChange,
   onRouteDataChange,
-  className
+  className,
+  selectedStartAddress,
+  selectedEndAddress
 }: {
   point1?: string
   point2?: string
@@ -133,6 +135,8 @@ export default function RealMap({
   onRouteChange?: (point1: string, point2: string, vehicle: string) => void
   onRouteDataChange?: (data: VietMapResponse) => void
   className?: string
+  selectedStartAddress?: any
+  selectedEndAddress?: any
 }) {
   const [routeData, setRouteData] = useState<VietMapResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -158,8 +162,9 @@ export default function RealMap({
       setLoading(true)
       setError(null)
       
+      // Sử dụng VietMap Routing API thực tế
       const response = await fetch(
-        `/api/vietmap?point1=${point1}&point2=${point2}&vehicle=${vehicle}`
+        `/api/map/routing?point1=${point1}&point2=${point2}&vehicle=${vehicle}`
       )
       
       if (!response.ok) {
@@ -234,7 +239,7 @@ export default function RealMap({
           <p className="text-gray-600 font-medium">Đang tải bản đồ VietMap...</p>
           <p className="text-sm text-gray-500 mt-2">Tìm tuyến đường tối ưu</p>
         </div>
-      </div>
+          </div>
     )
   }
 
@@ -244,13 +249,13 @@ export default function RealMap({
         <div className="text-center">
           <AlertCircle className="h-8 w-8 text-red-600 mx-auto mb-4" />
           <p className="text-red-600 font-medium mb-2">{error}</p>
-          <button 
-            onClick={fetchRouteData}
+            <button 
+              onClick={fetchRouteData}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Thử lại
-          </button>
-        </div>
+            >
+              Thử lại
+            </button>
+          </div>
       </div>
     )
   }
@@ -263,7 +268,7 @@ export default function RealMap({
           <p className="text-gray-600 font-medium">Không tìm thấy tuyến đường</p>
           <p className="text-sm text-gray-500 mt-2">Vui lòng kiểm tra lại điểm xuất phát và đích</p>
         </div>
-      </div>
+          </div>
     )
   }
 
@@ -278,86 +283,104 @@ export default function RealMap({
 
   return (
     <div className={`relative ${className || 'h-96'}`}>
-      {/* Route Selection */}
-      {routeData.paths.length > 1 && (
+        {/* Route Selection */}
+        {routeData.paths.length > 1 && (
         <div className="absolute top-4 left-4 z-10 flex space-x-2 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-lg">
-          {routeData.paths.map((path, index) => (
-            <button
-              key={index}
+            {routeData.paths.map((path, index) => (
+              <button
+                key={index}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-                selectedRoute === index 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-              onClick={() => setSelectedRoute(index)}
-            >
-              Tuyến {index + 1}
-            </button>
-          ))}
-        </div>
-      )}
+                  selectedRoute === index 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+                onClick={() => setSelectedRoute(index)}
+              >
+                Tuyến {index + 1}
+              </button>
+            ))}
+          </div>
+        )}
 
       {/* Map Container */}
-      <MapContainer
-        center={mapCenter}
-        zoom={14}
-        style={{ height: "100%", width: "100%" }}
+          <MapContainer
+            center={mapCenter}
+            zoom={14}
+            style={{ height: "100%", width: "100%" }}
         className="rounded-lg overflow-hidden"
-      >
-        {/* VietMap Tile Layer */}
-        <TileLayer
-          attribution='&copy; <a href="https://vietmap.vn">VietMap</a> contributors'
-          url="https://maps.vietmap.vn/api/tm/{z}/{x}/{y}@2x.png?apikey=6856756a5a89e36f1acd124738137de6ec22f32a8b94a444"
-        />
-        
-        {/* Start Marker */}
-        {startIcon && (
-          <Marker position={startPoint as [number, number]} icon={startIcon}>
-            <Popup>
-              <div className="text-center">
-                <div className="font-semibold text-green-600">🚀 Điểm xuất phát</div>
-                <div className="text-sm text-gray-600">
-                  {startPoint[0].toFixed(6)}, {startPoint[1].toFixed(6)}
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        )}
-        
-        {/* End Marker */}
-        {endIcon && (
-          <Marker position={endPoint as [number, number]} icon={endIcon}>
-            <Popup>
-              <div className="text-center">
-                <div className="font-semibold text-red-600">🎯 Điểm đến</div>
-                <div className="text-sm text-gray-600">
-                  {endPoint[0].toFixed(6)}, {endPoint[1].toFixed(6)}
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        )}
-        
-        {/* Route Line with gradient effect */}
-        <Polyline
-          positions={routePoints.map(point => [point[0], point[1]] as [number, number])}
-          color="#3B82F6"
-          weight={6}
-          opacity={0.8}
-          lineCap="round"
-          lineJoin="round"
-        />
-        
-        {/* Additional route line for shadow effect */}
-        <Polyline
-          positions={routePoints.map(point => [point[0], point[1]] as [number, number])}
-          color="#1E40AF"
-          weight={8}
-          opacity={0.3}
-          lineCap="round"
-          lineJoin="round"
-        />
-      </MapContainer>
+          >
+            {/* VietMap Tile Layer */}
+            <TileLayer
+              attribution='&copy; <a href="https://vietmap.vn">VietMap</a> contributors'
+              url="https://maps.vietmap.vn/api/tm/{z}/{x}/{y}@2x.png?apikey=6856756a5a89e36f1acd124738137de6ec22f32a8b94a444"
+            />
+            
+            {/* Start Marker */}
+            {startIcon && (
+              <Marker position={startPoint as [number, number]} icon={startIcon}>
+                <Popup>
+                  <div className="text-center">
+                    <div className="font-semibold text-green-600">🚀 Điểm xuất phát</div>
+                    {selectedStartAddress ? (
+                      <div className="text-sm text-gray-600 mt-1">
+                        <div className="font-medium">{selectedStartAddress.display_name}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {selectedStartAddress.lat}, {selectedStartAddress.lon}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-600">
+                        {startPoint[0].toFixed(6)}, {startPoint[1].toFixed(6)}
+                      </div>
+                    )}
+                  </div>
+                </Popup>
+              </Marker>
+            )}
+            
+            {/* End Marker */}
+            {endIcon && (
+              <Marker position={endPoint as [number, number]} icon={endIcon}>
+                <Popup>
+                  <div className="text-center">
+                    <div className="font-semibold text-red-600">🎯 Điểm đến</div>
+                    {selectedEndAddress ? (
+                      <div className="text-sm text-gray-600 mt-1">
+                        <div className="font-medium">{selectedEndAddress.display_name}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {selectedEndAddress.lat}, {selectedEndAddress.lon}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-600">
+                        {endPoint[0].toFixed(6)}, {endPoint[1].toFixed(6)}
+                      </div>
+                    )}
+                  </div>
+                </Popup>
+              </Marker>
+            )}
+            
+            {/* Route Line with gradient effect */}
+            <Polyline
+              positions={routePoints.map(point => [point[0], point[1]] as [number, number])}
+              color="#3B82F6"
+              weight={6}
+              opacity={0.8}
+              lineCap="round"
+              lineJoin="round"
+            />
+            
+            {/* Additional route line for shadow effect */}
+            <Polyline
+              positions={routePoints.map(point => [point[0], point[1]] as [number, number])}
+              color="#1E40AF"
+              weight={8}
+              opacity={0.3}
+              lineCap="round"
+              lineJoin="round"
+            />
+          </MapContainer>
 
       {/* Route Info Overlay */}
       <div className="absolute bottom-4 left-4 right-4 z-10">
@@ -369,16 +392,16 @@ export default function RealMap({
                 <span className="text-xs text-gray-600">Khoảng cách</span>
               </div>
               <p className="font-semibold text-sm text-gray-900">{formatDistance(currentRoute.distance)}</p>
-            </div>
-            
+          </div>
+          
             <div>
               <div className="flex items-center justify-center space-x-1 mb-1">
                 <Clock className="h-4 w-4 text-green-600" />
                 <span className="text-xs text-gray-600">Thời gian</span>
               </div>
               <p className="font-semibold text-sm text-gray-900">{formatTime(currentRoute.time)}</p>
-            </div>
-            
+          </div>
+          
             <div>
               <div className="flex items-center justify-center space-x-1 mb-1">
                 <Car className="h-4 w-4 text-orange-600" />
@@ -388,7 +411,7 @@ export default function RealMap({
             </div>
           </div>
         </div>
-      </div>
-    </div>
+          </div>
+        </div>
   )
 } 

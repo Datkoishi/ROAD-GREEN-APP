@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: 'Road Green - Hệ thống tối ưu hóa giao hàng',
   description: 'Ứng dụng tối ưu hóa tuyến đường giao hàng với tích hợp VietMap API',
   generator: 'v0.dev',
+  icons: {
+    icon: '/logo.jpg',
+    shortcut: '/logo.jpg',
+    apple: '/logo.jpg',
+  },
 }
 
 export default function RootLayout({

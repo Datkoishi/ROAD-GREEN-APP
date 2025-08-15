@@ -151,23 +151,23 @@ export default function EnhancedDashboard({ userScore }: DashboardStatsProps) {
                         stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
                       }`}>
                         {stat.change}
-                      </span>
+                    </span>
                       <span className="text-xs text-gray-500">{stat.description}</span>
-                    </div>
+        </div>
                   </div>
                   <div className={`p-3 rounded-xl ${stat.bgColor}`}>
                     <IconComponent className={`h-6 w-6 ${stat.color}`} />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
           )
         })}
-      </div>
+            </div>
 
       {/* Recent Activities */}
       <Card className="border-0 shadow-sm">
-        <CardHeader>
+                <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Activity className="h-5 w-5 text-purple-600" />
             <span>Hoạt động gần đây</span>
@@ -175,21 +175,21 @@ export default function EnhancedDashboard({ userScore }: DashboardStatsProps) {
           <CardDescription>
             Cập nhật mới nhất về hoạt động giao hàng
           </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
             {recentActivities.map((activity) => (
               <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className={`p-2 rounded-lg ${getStatusColor(activity.status)}`}>
                   {getActivityIcon(activity.type)}
-                </div>
-                <div className="flex-1 min-w-0">
+                        </div>
+                        <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium text-gray-900">{activity.title}</p>
                     <span className="text-xs text-gray-500">{activity.time}</span>
                   </div>
                   <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
-                </div>
+                        </div>
                 <div className="flex-shrink-0">
                   {activity.status === 'success' && (
                     <CheckCircle className="h-4 w-4 text-green-600" />
@@ -199,24 +199,24 @@ export default function EnhancedDashboard({ userScore }: DashboardStatsProps) {
                   )}
                   {activity.status === 'info' && (
                     <Route className="h-4 w-4 text-blue-600" />
-                  )}
+                        )}
                 </div>
-              </div>
-            ))}
-          </div>
+                      </div>
+                    ))}
+                  </div>
           
           <div className="mt-4 pt-4 border-t">
             <Button variant="outline" className="w-full">
               Xem tất cả hoạt động
             </Button>
           </div>
-        </CardContent>
-      </Card>
+                </CardContent>
+              </Card>
 
       {/* Performance Summary */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="border-0 shadow-sm">
-          <CardHeader>
+                <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <TrendingUp className="h-5 w-5 text-green-600" />
               <span>Hiệu suất tháng</span>
@@ -224,26 +224,26 @@ export default function EnhancedDashboard({ userScore }: DashboardStatsProps) {
             <CardDescription>
               So sánh với tháng trước
             </CardDescription>
-          </CardHeader>
+                </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Tỷ lệ giao hàng thành công</span>
-              <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2">
                 <span className="font-semibold text-green-600">98.5%</span>
                 <TrendingUp className="h-4 w-4 text-green-600" />
-              </div>
-            </div>
+                      </div>
+                    </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-green-600 h-2 rounded-full" style={{ width: '98.5%' }}></div>
-            </div>
-            
-            <div className="flex items-center justify-between">
+                    </div>
+
+                    <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Thời gian giao trung bình</span>
-              <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2">
                 <span className="font-semibold text-blue-600">32 phút</span>
                 <TrendingDown className="h-4 w-4 text-blue-600" />
-              </div>
-            </div>
+                      </div>
+                    </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-blue-600 h-2 rounded-full" style={{ width: '85%' }}></div>
             </div>
@@ -257,12 +257,12 @@ export default function EnhancedDashboard({ userScore }: DashboardStatsProps) {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div className="bg-yellow-600 h-2 rounded-full" style={{ width: '96%' }}></div>
-            </div>
-          </CardContent>
-        </Card>
+                  </div>
+                </CardContent>
+              </Card>
 
         <Card className="border-0 shadow-sm">
-          <CardHeader>
+                <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <MapPin className="h-5 w-5 text-purple-600" />
               <span>Khu vực hoạt động</span>
@@ -270,8 +270,8 @@ export default function EnhancedDashboard({ userScore }: DashboardStatsProps) {
             <CardDescription>
               Các quận đã giao hàng hôm nay
             </CardDescription>
-          </CardHeader>
-          <CardContent>
+                </CardHeader>
+                <CardContent>
             <div className="space-y-3">
               {[
                 { district: "Quận 1", orders: 4, color: "bg-blue-500" },
@@ -288,19 +288,19 @@ export default function EnhancedDashboard({ userScore }: DashboardStatsProps) {
                   <Badge variant="secondary" className="text-xs">
                     {item.orders} đơn
                   </Badge>
-                </div>
+                    </div>
               ))}
-            </div>
+                    </div>
             
             <div className="mt-4 pt-4 border-t">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">Tổng cộng:</span>
                 <span className="font-semibold">12 đơn hàng</span>
-              </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   )
 }

@@ -19,6 +19,7 @@ CREATE TABLE users (
     total_distance DECIMAL(10,2) DEFAULT 0,
     rating DECIMAL(3,2) DEFAULT 5.00,
     status ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
+    role ENUM('driver', 'manager') DEFAULT 'driver',
     last_location_lat DECIMAL(10,8),
     last_location_lng DECIMAL(11,8),
     last_location_update TIMESTAMP,
@@ -26,6 +27,7 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_phone (phone),
     INDEX idx_status (status),
+    INDEX idx_role (role),
     INDEX idx_location (last_location_lat, last_location_lng)
 );
 
@@ -182,6 +184,7 @@ CREATE TABLE delivery_history (
     customer_feedback TEXT,
     delivery_photo_url VARCHAR(255),
     signature_url VARCHAR(255),
+    distance_km DECIMAL(8,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -258,13 +261,30 @@ CREATE TABLE user_sessions (
     INDEX idx_user_active (user_id, expires_at)
 );
 
--- Insert sample data
-INSERT INTO users (username, email, password_hash, full_name, phone, vehicle_type, points, total_deliveries) VALUES
-('driver001', 'driver1@roadgreen.vn', '$2b$10$example_hash_1', 'Nguyễn Văn A', '0901234567', 'motorbike', 1250, 45),
-('driver002', 'driver2@roadgreen.vn', '$2b$10$example_hash_2', 'Trần Thị B', '0912345678', 'car', 890, 32),
-('driver003', 'driver3@roadgreen.vn', '$2b$10$example_hash_3', 'Lê Văn C', '0923456789', 'motorbike', 1580, 67);
+-- Insert sample data with hashed passwords
+-- Password for all users is "123456" (hashed with bcrypt)
+INSERT INTO users (username, email, password_hash, full_name, phone, vehicle_type, points, total_deliveries, role) VALUES
+('manager', 'manager@roadgreen.vn', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HS.iK2O', 'Nguyễn Văn Quản Lý', '0901234567', 'car', 0, 0, 'manager'),
+('driver001', 'driver1@roadgreen.vn', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HS.iK2O', 'Nguyễn Văn A', '0901234568', 'motorbike', 1250, 45, 'driver'),
+('driver002', 'driver2@roadgreen.vn', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HS.iK2O', 'Trần Thị B', '0901234569', 'car', 890, 32, 'driver'),
+('driver003', 'driver3@roadgreen.vn', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/HS.iK2O', 'Lê Văn C', '0901234570', 'motorbike', 1580, 67, 'driver');
 
 INSERT INTO customers (phone, full_name, address, latitude, longitude, ward, district, city, total_orders) VALUES
 ('0901111111', 'Nguyễn Văn Khách', '123 Nguyễn Văn Linh, Quận 7, TP.HCM', 10.7379, 106.7017, 'Tân Thuận Đông', 'Quận 7', 'TP.HCM', 5),
 ('0902222222', 'Trần Thị Lan', '456 Lê Văn Việt, Quận 9, TP.HCM', 10.8411, 106.8098, 'Hiệp Phú', 'Quận 9', 'TP.HCM', 3),
-('0903333333', 'Lê Văn Nam', '789 Võ Văn Tần, Quận 3, TP.HCM', 10.7769, 106.6917, 'Võ Thị Sáu', 'Quận 3', 'TP.HCM', 8);
+('0903333333', 'Lê Văn Nam', '789 Võ Văn Tần, Quận 3, TP.HCM', 10.7769, 106.6917, 'Võ Thị Sáu', 'Quận 3', 'TP.HCM', 8),
+('0904444444', 'Phạm Thị Mai', '321 Điện Biên Phủ, Quận 1, TP.HCM', 10.7729, 106.6984, 'Đa Kao', 'Quận 1', 'TP.HCM', 12),
+('0905555555', 'Hoàng Văn Dũng', '654 Nguyễn Thị Minh Khai, Quận 3, TP.HCM', 10.7884, 106.7056, 'Phường 6', 'Quận 3', 'TP.HCM', 6);
+
+-- Insert sample delivery history with ratings
+INSERT INTO delivery_history (order_id, driver_id, customer_id, delivery_date, delivery_time, items, customer_rating, customer_feedback, distance_km) VALUES
+(1, 2, 1, CURDATE(), '09:30:00', 'Hàng điện tử', 5, 'Giao hàng nhanh, tài xế thân thiện', 5.2),
+(2, 2, 2, CURDATE(), '10:15:00', 'Thực phẩm', 4, 'Giao hàng đúng giờ', 3.8),
+(3, 3, 3, CURDATE(), '11:00:00', 'Quần áo', 5, 'Rất hài lòng với dịch vụ', 7.1),
+(4, 4, 4, CURDATE(), '14:30:00', 'Sách vở', 4, 'Giao hàng cẩn thận', 4.5),
+(5, 2, 5, CURDATE(), '16:00:00', 'Đồ gia dụng', 5, 'Tài xế chuyên nghiệp', 6.2),
+(6, 3, 1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), '09:00:00', 'Hàng điện tử', 4, 'Giao hàng tốt', 5.0),
+(7, 4, 2, DATE_SUB(CURDATE(), INTERVAL 1 DAY), '10:30:00', 'Thực phẩm', 5, 'Rất nhanh', 3.5),
+(8, 2, 3, DATE_SUB(CURDATE(), INTERVAL 2 DAY), '11:15:00', 'Quần áo', 4, 'Đúng giờ', 7.3),
+(9, 3, 4, DATE_SUB(CURDATE(), INTERVAL 2 DAY), '14:00:00', 'Sách vở', 5, 'Tuyệt vời', 4.8),
+(10, 4, 5, DATE_SUB(CURDATE(), INTERVAL 3 DAY), '15:30:00', 'Đồ gia dụng', 4, 'Hài lòng', 6.0);

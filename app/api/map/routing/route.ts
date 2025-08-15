@@ -11,7 +11,7 @@ function checkRateLimit(ip: string): boolean {
     return true
   }
   
-  if (limit.count >= 20) { // 20 requests per minute for VRP
+  if (limit.count >= 100) { // 100 requests per minute for routing
     return false
   }
   
@@ -19,7 +19,16 @@ function checkRateLimit(ip: string): boolean {
   return true
 }
 
-export async function POST(request: NextRequest) {
+function validateCoordinates(lat: number, lng: number): boolean {
+  return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180
+}
+
+function validateVehicle(vehicle: string): boolean {
+  const validVehicles = ['car', 'motorcycle', 'bike', 'truck']
+  return validVehicles.includes(vehicle)
+}
+
+export async function GET(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     
@@ -30,58 +39,55 @@ export async function POST(request: NextRequest) {
       }, { status: 429 })
     }
 
-    const body = await request.json()
-    const { 
-      vehicles, // array of vehicle objects with start/end points
-      points,   // array of delivery points
-      vehicle = 'car',
-      format = 'json'
-    } = body
-
-    if (!vehicles || !points) {
+    const { searchParams } = new URL(request.url)
+    const point1 = searchParams.get('point1')
+    const point2 = searchParams.get('point2')
+    const vehicle = searchParams.get('vehicle') || 'car'
+    const format = searchParams.get('format') || 'json'
+    
+    if (!point1 || !point2) {
       return NextResponse.json({
         success: false,
-        error: "Vehicles and points are required"
+        error: "Both point1 and point2 parameters are required"
       }, { status: 400 })
     }
 
-    if (vehicles.length < 1 || vehicles.length > 10) {
+    // Validate coordinates
+    const [lat1, lng1] = point1.split(',').map(Number)
+    const [lat2, lng2] = point2.split(',').map(Number)
+    
+    if (!validateCoordinates(lat1, lng1) || !validateCoordinates(lat2, lng2)) {
       return NextResponse.json({
         success: false,
-        error: "Invalid number of vehicles. Must be 1-10."
+        error: "Invalid coordinates provided"
       }, { status: 400 })
     }
 
-    if (points.length < 2 || points.length > 50) {
+    if (!validateVehicle(vehicle)) {
       return NextResponse.json({
         success: false,
-        error: "Invalid number of points. Must be 2-50."
+        error: "Invalid vehicle type. Supported: car, motorcycle, bike, truck"
       }, { status: 400 })
     }
 
     const apiVersion = process.env.VIETMAP_API_VERSION || '1.1'
     const apiKey = process.env.VIETMAP_API_KEY || '6856756a5a89e36f1acd124738137de6ec22f32a8b94a444'
     
-    // VietMap VRP URL
-    const vrpUrl = `https://maps.vietmap.vn/api/vrp?api-version=${apiVersion}&apikey=${apiKey}&vehicle=${vehicle}&format=${format}`
+    // VietMap routing URL
+    const routingUrl = `https://maps.vietmap.vn/api/route?api-version=${apiVersion}&apikey=${apiKey}&point=${point1}&point=${point2}&vehicle=${vehicle}&format=${format}`
     
-    const response = await fetch(vrpUrl, {
-      method: 'POST',
+    const response = await fetch(routingUrl, {
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
         'User-Agent': 'RoadGreen-App/1.0'
-      },
-      body: JSON.stringify({
-        vehicles,
-        points
-      })
+      }
     })
 
     if (!response.ok) {
       return NextResponse.json({
         success: false,
-        error: `VRP optimization failed: ${response.status}`
+        error: `Routing failed: ${response.status}`
       }, { status: response.status })
     }
 
@@ -95,7 +101,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error("VRP API error:", error)
+    console.error("Routing API error:", error)
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : "Internal server error"

@@ -21,15 +21,15 @@ export default function QuickStats({ userScore }: QuickStatsProps) {
       description: "Đơn hàng đã giao hôm nay"
     },
     {
-      title: "Quãng đường",
-      value: "45.2 km",
-      change: "+8.5 km",
+      title: "VietMap API",
+      value: "7 APIs",
+      change: "Active",
       changeType: "positive",
       icon: MapPin,
       color: "text-green-600",
       bgColor: "bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700",
       gradient: "from-green-50 via-emerald-100 to-teal-50",
-      description: "Tổng quãng đường di chuyển"
+      description: "Tích hợp đầy đủ VietMap"
     },
     {
       title: "Thời gian",

@@ -37,7 +37,7 @@ import TrafficReporter from "@/components/traffic-reporter"
 import MapView from "@/components/map-view"
 import VietMapRoute from "@/components/vietmap-route"
 import MapWrapper from "@/components/map-wrapper"
-import AddressSearch from "@/components/address-search"
+import AddressSearch from "@/components/address-search-simple"
 import RouteDetails from "@/components/route-details"
 import RouteStats from "@/components/route-stats"
 import SSRFixInfo from "@/components/ssr-fix-info"
@@ -46,6 +46,9 @@ import AddressSearchInfo from "@/components/address-search-info"
 import SecurityInfo from "@/components/security-info"
 import EnhancedDashboard from "@/components/enhanced-dashboard"
 import QuickStats from "@/components/quick-stats"
+import VietMapFeatures from "@/components/vietmap-features"
+import AuthButtons from "@/components/auth-buttons"
+import Logo from "@/components/logo"
 
 export default function Dashboard() {
   const [activeFeature, setActiveFeature] = useState<string | null>(null)
@@ -59,6 +62,8 @@ export default function Dashboard() {
   })
   const [routeData, setRouteData] = useState<any>(null)
   const [selectedRoute, setSelectedRoute] = useState(0)
+  const [selectedStartAddress, setSelectedStartAddress] = useState<any>(null)
+  const [selectedEndAddress, setSelectedEndAddress] = useState<any>(null)
 
   const navigationItems = [
     {
@@ -110,30 +115,32 @@ export default function Dashboard() {
       bgColor: "bg-gradient-to-br from-indigo-500 to-purple-600",
       gradient: "from-indigo-50 to-purple-100",
       active: activeFeature === "analytics"
+    },
+    {
+      id: "vietmap-features",
+      title: "VietMap API",
+      description: "Tất cả tính năng VietMap",
+      icon: Navigation,
+      color: "text-teal-600",
+      bgColor: "bg-gradient-to-br from-teal-500 to-cyan-600",
+      gradient: "from-teal-50 to-cyan-100",
+      active: activeFeature === "vietmap-features"
     }
   ]
 
   const Sidebar = () => (
     <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white/95 backdrop-blur-xl shadow-2xl transform transition-all duration-500 ease-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:inset-0 border-r border-gray-200/50`}>
       <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
-        <div className="flex items-center space-x-3">
-          <div className="p-3 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700 rounded-xl shadow-lg">
-            <Truck className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">Road Green</h1>
-            <p className="text-xs text-gray-500 font-medium">Professional Navigation System</p>
-          </div>
-        </div>
-        <Button
-          variant="ghost"
+        <Logo size="md" />
+                <Button
+                  variant="ghost"
           size="sm"
           onClick={() => setSidebarOpen(false)}
           className="lg:hidden hover:bg-gray-100/50 rounded-full transition-all duration-300"
-        >
+                >
           <X className="h-4 w-4" />
-        </Button>
-      </div>
+                </Button>
+                </div>
 
       <nav className="p-4 space-y-2">
         {navigationItems.map((item, index) => {
@@ -165,18 +172,7 @@ export default function Dashboard() {
       </nav>
 
       <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200/50">
-        <div className="flex items-center space-x-3 p-4 bg-gradient-to-r from-gray-50 via-gray-100 to-gray-200 rounded-xl shadow-sm">
-          <div className="w-8 h-8 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700 rounded-full flex items-center justify-center shadow-lg">
-            <span className="text-white text-sm font-bold">TD</span>
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-gray-900">Tài xế</p>
-            <p className="text-xs text-gray-500">Đang hoạt động</p>
-          </div>
-          <Button variant="ghost" size="sm" className="hover:bg-white/50 rounded-full transition-all duration-300">
-            <Settings className="h-4 w-4" />
-          </Button>
-        </div>
+        <AuthButtons variant="sidebar" />
       </div>
     </div>
   )
@@ -213,7 +209,7 @@ export default function Dashboard() {
               {activeFeature ? navigationItems.find(item => item.id === activeFeature)?.title : 'Bản đồ chỉ đường'}
             </h1>
             <p className="text-sm text-gray-500 font-medium">
-              {activeFeature ? navigationItems.find(item => item.id === activeFeature)?.description : 'Tìm tuyến đường tối ưu với VietMap'}
+              {activeFeature ? navigationItems.find(item => item.id === activeFeature)?.description : 'Tìm tuyến đường tối ưu với VietMap API thực tế'}
             </p>
           </div>
         </div>
@@ -228,9 +224,12 @@ export default function Dashboard() {
             <Award className="h-4 w-4 text-yellow-600" />
             <span className="text-sm font-bold text-yellow-800">{userScore}</span>
           </div>
+
+          {/* Auth Buttons */}
+          <AuthButtons variant="header" />
         </div>
-      </div>
-    </header>
+          </div>
+        </header>
   )
 
   if (activeFeature && activeFeature !== "dashboard") {
@@ -240,14 +239,14 @@ export default function Dashboard() {
         
         <div className="flex-1 flex flex-col lg:ml-0">
           <Header />
-          
+
           <main className="flex-1 p-6">
             <div className="max-w-7xl mx-auto animate-in slide-in-from-bottom-4 duration-500">
-              {activeFeature === "route-optimizer" && <RouteOptimizer />}
-              {activeFeature === "customer-manager" && <CustomerManager />}
-              {activeFeature === "traffic-reporter" && (
-                <TrafficReporter userScore={userScore} setUserScore={setUserScore} />
-              )}
+          {activeFeature === "route-optimizer" && <RouteOptimizer />}
+          {activeFeature === "customer-manager" && <CustomerManager />}
+          {activeFeature === "traffic-reporter" && (
+            <TrafficReporter userScore={userScore} setUserScore={setUserScore} />
+          )}
               {activeFeature === "analytics" && (
                 <div className="space-y-6">
                   <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
@@ -264,8 +263,9 @@ export default function Dashboard() {
                   </Card>
                 </div>
               )}
+              {activeFeature === "vietmap-features" && <VietMapFeatures />}
             </div>
-          </main>
+        </main>
         </div>
       </div>
     )
@@ -292,7 +292,7 @@ export default function Dashboard() {
                       <CardTitle className="flex items-center space-x-2 text-xl">
                         <div className="p-2 bg-gradient-to-br from-blue-500 via-green-600 to-emerald-700 rounded-lg shadow-lg">
                           <Map className="h-5 w-5 text-white" />
-                        </div>
+        </div>
                         <span className="bg-gradient-to-r from-blue-600 via-green-600 to-emerald-600 bg-clip-text text-transparent font-bold">
                           Bản đồ chỉ đường
                         </span>
@@ -309,19 +309,21 @@ export default function Dashboard() {
                     <CardDescription className="text-gray-600 font-medium">
                       Từ: {routeParams.point1} → Đến: {routeParams.point2}
                     </CardDescription>
-                  </CardHeader>
+                </CardHeader>
                   <CardContent className="p-0">
-                    <MapWrapper 
-                      point1={routeParams.point1}
-                      point2={routeParams.point2}
-                      vehicle={routeParams.vehicle}
-                      onRouteChange={(point1: string, point2: string, vehicle: string) => {
-                        setRouteParams({ point1, point2, vehicle })
-                      }}
-                      onRouteDataChange={(data: any) => {
-                        setRouteData(data)
-                      }}
-                    />
+            <MapWrapper 
+              point1={routeParams.point1}
+              point2={routeParams.point2}
+              vehicle={routeParams.vehicle}
+              selectedStartAddress={selectedStartAddress}
+              selectedEndAddress={selectedEndAddress}
+              onRouteChange={(point1: string, point2: string, vehicle: string) => {
+                setRouteParams({ point1, point2, vehicle })
+              }}
+              onRouteDataChange={(data: any) => {
+                setRouteData(data)
+              }}
+            />
                   </CardContent>
                 </Card>
               </div>
@@ -334,7 +336,7 @@ export default function Dashboard() {
                     <CardTitle className="flex items-center space-x-2 text-lg">
                       <div className="p-2 bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700 rounded-lg shadow-lg">
                         <Search className="h-4 w-4 text-white" />
-                      </div>
+          </div>
                       <span className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent font-bold">
                         Tìm đường
                       </span>
@@ -344,6 +346,10 @@ export default function Dashboard() {
                     <AddressSearch 
                       onRouteChange={(point1, point2, vehicle) => {
                         setRouteParams({ point1, point2, vehicle })
+                      }}
+                      onAddressChange={(startAddress, endAddress) => {
+                        setSelectedStartAddress(startAddress)
+                        setSelectedEndAddress(endAddress)
                       }}
                       compact={true}
                     />
@@ -355,30 +361,30 @@ export default function Dashboard() {
             {/* Route Details - Show when route data exists */}
             {routeData && !mapExpanded && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-                <RouteStats 
-                  routeData={routeData}
-                  vehicle={routeParams.vehicle}
-                />
-                <RouteDetails 
-                  routeData={routeData}
-                  selectedRoute={selectedRoute}
-                  onRouteChange={setSelectedRoute}
-                  vehicle={routeParams.vehicle}
-                />
-              </div>
+            <RouteStats 
+              routeData={routeData}
+              vehicle={routeParams.vehicle}
+            />
+            <RouteDetails 
+              routeData={routeData}
+              selectedRoute={selectedRoute}
+              onRouteChange={setSelectedRoute}
+              vehicle={routeParams.vehicle}
+            />
+          </div>
             )}
-
+        
             {/* Info Cards - Only show when not expanded */}
             {!mapExpanded && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-                <SSRFixInfo />
-                <HooksFixInfo />
-                <AddressSearchInfo />
-                <SecurityInfo />
+          <SSRFixInfo />
+          <HooksFixInfo />
+          <AddressSearchInfo />
+          <SecurityInfo />
               </div>
             )}
-          </div>
-        </main>
+        </div>
+      </main>
       </div>
 
       {/* Mobile Overlay */}

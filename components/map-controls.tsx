@@ -20,7 +20,24 @@ export default function MapControls({ onRouteChange, loading = false, compact = 
   const [vehicle, setVehicle] = useState("car")
 
   const handleSearch = () => {
+    // Validate coordinates before searching
+    const coords1 = point1.split(',')
+    const coords2 = point2.split(',')
+    
+    if (coords1.length === 2 && coords2.length === 2) {
+      const lat1 = parseFloat(coords1[0])
+      const lng1 = parseFloat(coords1[1])
+      const lat2 = parseFloat(coords2[0])
+      const lng2 = parseFloat(coords2[1])
+      
+      if (!isNaN(lat1) && !isNaN(lng1) && !isNaN(lat2) && !isNaN(lng2)) {
     onRouteChange(point1, point2, vehicle)
+      } else {
+        alert('Vui lòng nhập tọa độ hợp lệ (ví dụ: 10.7729,106.6984)')
+      }
+    } else {
+      alert('Vui lòng nhập tọa độ đúng định dạng (lat,lng)')
+    }
   }
 
   const presetRoutes = [

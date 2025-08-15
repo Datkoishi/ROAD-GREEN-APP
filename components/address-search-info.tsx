@@ -10,10 +10,10 @@ export default function AddressSearchInfo() {
       <CardHeader>
         <CardTitle className="flex items-center space-x-2 text-indigo-800">
           <Search className="h-5 w-5" />
-          <span>Tìm đường theo địa chỉ thực tế</span>
+          <span>Autocomplete địa chỉ như Google Maps</span>
         </CardTitle>
         <CardDescription className="text-indigo-700">
-          Tính năng tìm kiếm địa chỉ với autocomplete và geocoding
+          Tích hợp OpenStreetMap API thực tế cho tìm kiếm địa chỉ với autocomplete và geocoding
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -24,10 +24,12 @@ export default function AddressSearchInfo() {
               <span>Tính năng chính</span>
             </h4>
             <div className="text-xs text-indigo-700 space-y-1">
-              <p>• Tìm kiếm địa chỉ với autocomplete</p>
-              <p>• Chuyển đổi địa chỉ thành tọa độ</p>
-              <p>• Gợi ý địa chỉ thông minh</p>
-              <p>• Hỗ trợ địa chỉ tiếng Việt</p>
+                          <p>• Autocomplete real-time như Google Maps</p>
+            <p>• Gợi ý địa chỉ với icon và thông tin chi tiết</p>
+            <p>• Hiển thị loại địa điểm (nhà hàng, khách sạn, v.v.)</p>
+            <p>• Đánh giá độ nổi bật của địa điểm</p>
+            <p>• Debounced search (300ms) cho performance</p>
+            <p>• Tự động vẽ đường đi khi chọn đủ 2 địa chỉ</p>
             </div>
           </div>
           
@@ -37,10 +39,11 @@ export default function AddressSearchInfo() {
               <span>Cách sử dụng</span>
             </h4>
             <div className="text-xs text-indigo-700 space-y-1">
-              <p>• Nhập địa chỉ xuất phát và đích</p>
-              <p>• Chọn địa chỉ từ danh sách gợi ý</p>
-              <p>• Chọn loại phương tiện</p>
-              <p>• Nhấn "Tìm tuyến đường"</p>
+                          <p>• Nhập địa chỉ → Autocomplete hiện ngay</p>
+            <p>• Chọn từ danh sách với icon và thông tin</p>
+            <p>• Xem loại địa điểm và độ nổi bật</p>
+            <p>• Tự động vẽ đường đi khi chọn đủ 2 địa chỉ</p>
+            <p>• Hiển thị marker và route trên bản đồ</p>
             </div>
           </div>
         </div>
@@ -75,10 +78,10 @@ export default function AddressSearchInfo() {
         <div className="bg-green-100 p-3 rounded-lg">
           <div className="flex items-center space-x-2">
             <CheckCircle className="h-4 w-4 text-green-600" />
-            <div className="text-xs text-green-800">
-              <p className="font-medium">✅ Tính năng hoạt động hoàn hảo</p>
-              <p>Tìm kiếm địa chỉ với autocomplete và geocoding</p>
-            </div>
+                      <div className="text-xs text-green-800">
+            <p className="font-medium">✅ Autocomplete với dữ liệu thực tế</p>
+            <p>Gợi ý địa chỉ thông minh từ OpenStreetMap với thông tin chi tiết</p>
+          </div>
           </div>
         </div>
       </CardContent>

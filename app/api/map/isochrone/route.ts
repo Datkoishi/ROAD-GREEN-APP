@@ -11,7 +11,7 @@ function checkRateLimit(ip: string): boolean {
     return true
   }
   
-  if (limit.count >= 20) { // 20 requests per minute for VRP
+  if (limit.count >= 40) { // 40 requests per minute for isochrone
     return false
   }
   
@@ -19,7 +19,11 @@ function checkRateLimit(ip: string): boolean {
   return true
 }
 
-export async function POST(request: NextRequest) {
+function validateCoordinates(lat: number, lng: number): boolean {
+  return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180
+}
+
+export async function GET(request: NextRequest) {
   try {
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     
@@ -30,58 +34,56 @@ export async function POST(request: NextRequest) {
       }, { status: 429 })
     }
 
-    const body = await request.json()
-    const { 
-      vehicles, // array of vehicle objects with start/end points
-      points,   // array of delivery points
-      vehicle = 'car',
-      format = 'json'
-    } = body
-
-    if (!vehicles || !points) {
+    const { searchParams } = new URL(request.url)
+    const lat = searchParams.get('lat')
+    const lng = searchParams.get('lng')
+    const time = searchParams.get('time') || '600' // time in seconds (10 minutes default)
+    const vehicle = searchParams.get('vehicle') || 'car'
+    const format = searchParams.get('format') || 'json'
+    
+    if (!lat || !lng) {
       return NextResponse.json({
         success: false,
-        error: "Vehicles and points are required"
+        error: "Latitude and longitude parameters are required"
       }, { status: 400 })
     }
 
-    if (vehicles.length < 1 || vehicles.length > 10) {
+    const latitude = parseFloat(lat)
+    const longitude = parseFloat(lng)
+    const timeLimit = parseInt(time)
+    
+    if (!validateCoordinates(latitude, longitude)) {
       return NextResponse.json({
         success: false,
-        error: "Invalid number of vehicles. Must be 1-10."
+        error: "Invalid coordinates. Latitude must be between -90 and 90, longitude must be between -180 and 180"
       }, { status: 400 })
     }
 
-    if (points.length < 2 || points.length > 50) {
+    if (timeLimit < 60 || timeLimit > 3600) {
       return NextResponse.json({
         success: false,
-        error: "Invalid number of points. Must be 2-50."
+        error: "Invalid time limit. Must be between 60 and 3600 seconds."
       }, { status: 400 })
     }
 
     const apiVersion = process.env.VIETMAP_API_VERSION || '1.1'
     const apiKey = process.env.VIETMAP_API_KEY || '6856756a5a89e36f1acd124738137de6ec22f32a8b94a444'
     
-    // VietMap VRP URL
-    const vrpUrl = `https://maps.vietmap.vn/api/vrp?api-version=${apiVersion}&apikey=${apiKey}&vehicle=${vehicle}&format=${format}`
+    // VietMap isochrone URL
+    const isochroneUrl = `https://maps.vietmap.vn/api/isochrone?api-version=${apiVersion}&apikey=${apiKey}&lat=${latitude}&lon=${longitude}&time_limit=${timeLimit}&vehicle=${vehicle}&format=${format}`
     
-    const response = await fetch(vrpUrl, {
-      method: 'POST',
+    const response = await fetch(isochroneUrl, {
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
         'User-Agent': 'RoadGreen-App/1.0'
-      },
-      body: JSON.stringify({
-        vehicles,
-        points
-      })
+      }
     })
 
     if (!response.ok) {
       return NextResponse.json({
         success: false,
-        error: `VRP optimization failed: ${response.status}`
+        error: `Isochrone calculation failed: ${response.status}`
       }, { status: response.status })
     }
 
@@ -95,7 +97,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error("VRP API error:", error)
+    console.error("Isochrone API error:", error)
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : "Internal server error"
