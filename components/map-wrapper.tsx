@@ -7,7 +7,7 @@ import dynamic from "next/dynamic"
 const RealMap = dynamic(() => import("./real-map"), {
   ssr: false,
   loading: () => (
-    <div className="h-96 bg-gradient-to-br from-blue-50 via-green-50 to-purple-50 rounded-lg flex items-center justify-center relative overflow-hidden">
+    <div className="h-64 sm:h-96 bg-gradient-to-br from-blue-50 via-green-50 to-purple-50 rounded-lg flex items-center justify-center relative overflow-hidden">
       {/* Animated background */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 via-green-400/10 to-purple-400/10 animate-pulse" />
       
@@ -57,7 +57,7 @@ export default function MapWrapper(props: MapWrapperProps) {
 
   if (!isClient) {
     return (
-      <div className={`bg-gradient-to-br from-blue-50 via-green-50 to-purple-50 rounded-lg flex items-center justify-center relative overflow-hidden ${props.className || 'h-96'}`}>
+      <div className={`bg-gradient-to-br from-blue-50 via-green-50 to-purple-50 rounded-lg flex items-center justify-center relative overflow-hidden ${props.className || 'h-64 sm:h-96'}`}>
         {/* Animated background */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 via-green-400/10 to-purple-400/10 animate-pulse" />
         
@@ -82,7 +82,7 @@ export default function MapWrapper(props: MapWrapperProps) {
 
   if (isLoading) {
     return (
-      <div className={`bg-gradient-to-br from-blue-50 via-green-50 to-purple-50 rounded-lg flex items-center justify-center relative overflow-hidden ${props.className || 'h-96'}`}>
+      <div className={`bg-gradient-to-br from-blue-50 via-green-50 to-purple-50 rounded-lg flex items-center justify-center relative overflow-hidden ${props.className || 'h-64 sm:h-96'}`}>
         {/* Animated background */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 via-green-400/10 to-purple-400/10 animate-pulse" />
         
@@ -105,7 +105,7 @@ export default function MapWrapper(props: MapWrapperProps) {
   }
 
   return (
-    <div className={`animate-in slide-in-from-bottom-4 duration-700 ${props.className || 'h-96'}`}>
+    <div className={`animate-in slide-in-from-bottom-4 duration-700 ${props.className || 'h-64 sm:h-96'}`}>
       <RealMap {...props} />
     </div>
   )

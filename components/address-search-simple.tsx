@@ -488,7 +488,7 @@ export default function AddressSearchSimple({ onRouteChange, onAddressChange, lo
             <Sparkles className="h-3 w-3 text-purple-600" />
             <span>Địa chỉ mẫu</span>
           </Label>
-          <div className="grid grid-cols-1 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {presetAddresses.map((preset, index) => (
               <Button
                 key={index}

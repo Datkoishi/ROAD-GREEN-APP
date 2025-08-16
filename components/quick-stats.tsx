@@ -46,7 +46,7 @@ export default function QuickStats({ userScore }: QuickStatsProps) {
   ]
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
       {stats.map((stat, index) => {
         const IconComponent = stat.icon
         return (
@@ -62,7 +62,7 @@ export default function QuickStats({ userScore }: QuickStatsProps) {
             <div className="absolute inset-0 rounded-lg border-2 border-transparent group-hover:border-gray-200/50 transition-all duration-500" />
             
             {/* Content */}
-            <CardContent className="p-6 relative z-10">
+            <CardContent className="p-4 sm:p-6 relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-3 ${stat.bgColor} rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                   <IconComponent className="h-5 w-5 text-white" />
@@ -79,7 +79,7 @@ export default function QuickStats({ userScore }: QuickStatsProps) {
                 <p className="text-sm text-gray-600 font-medium mb-1 group-hover:text-gray-700 transition-colors">
                   {stat.title}
                 </p>
-                <p className="text-2xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors mb-1">
+                <p className="text-lg sm:text-2xl font-bold text-gray-900 group-hover:text-gray-800 transition-colors mb-1">
                   {stat.value}
                 </p>
                 <p className="text-xs text-gray-500 group-hover:text-gray-600 transition-colors">

@@ -93,7 +93,7 @@ export default function RouteStats({ routeData, vehicle }: RouteStatsProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Tổng quan */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
           <div className="p-3 bg-blue-50 rounded-lg">
             <div className="flex items-center space-x-2">
               <MapPin className="h-4 w-4 text-blue-600" />
@@ -138,7 +138,7 @@ export default function RouteStats({ routeData, vehicle }: RouteStatsProps) {
         {/* Phân tích hướng đi */}
         <div className="space-y-2">
           <h4 className="text-sm font-semibold text-gray-700">Phân tích hướng đi</h4>
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
               <span className="text-gray-600">Đi thẳng:</span>
               <Badge variant="outline" className="text-xs">

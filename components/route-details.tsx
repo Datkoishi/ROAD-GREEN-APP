@@ -157,7 +157,7 @@ export default function RouteDetails({ routeData, selectedRoute, onRouteChange, 
         )}
 
         {/* Route Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <div className="flex items-center space-x-2 p-3 bg-blue-50 rounded-lg">
             <Navigation className="h-4 w-4 text-blue-600" />
             <div>
@@ -210,7 +210,7 @@ export default function RouteDetails({ routeData, selectedRoute, onRouteChange, 
               </Button>
             </div>
             
-            <div className={`space-y-2 ${expandedInstructions ? 'max-h-96' : 'max-h-64'} overflow-y-auto`}>
+            <div className={`space-y-2 ${expandedInstructions ? 'max-h-96' : 'max-h-48 sm:max-h-64'} overflow-y-auto`}>
               {currentRoute.instructions.map((instruction, index) => (
                 <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   {/* Step Number */}
@@ -254,7 +254,7 @@ export default function RouteDetails({ routeData, selectedRoute, onRouteChange, 
         {/* Route Statistics */}
         <div className="pt-4 border-t">
           <h4 className="text-sm font-semibold text-gray-700 mb-2">Thống kê tuyến đường</h4>
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
             <div className="flex justify-between">
               <span className="text-gray-600">Tổng khoảng cách:</span>
               <span className="font-medium">{formatDistance(currentRoute.distance)}</span>

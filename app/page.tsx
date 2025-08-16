@@ -35,7 +35,7 @@ import RouteOptimizer from "@/components/route-optimizer"
 import CustomerManager from "@/components/customer-manager"
 import TrafficReporter from "@/components/traffic-reporter"
 import MapView from "@/components/map-view"
-import VietMapRoute from "@/components/vietmap-route"
+
 import MapWrapper from "@/components/map-wrapper"
 import AddressSearch from "@/components/address-search-simple"
 import RouteDetails from "@/components/route-details"
@@ -120,8 +120,8 @@ export default function Dashboard() {
   ]
 
   const Sidebar = () => (
-    <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white/95 backdrop-blur-xl shadow-2xl transform transition-all duration-500 ease-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:inset-0 border-r border-gray-200/50`}>
-      <div className="flex items-center justify-between p-6 border-b border-gray-200/50">
+    <div className={`fixed inset-y-0 left-0 z-50 w-80 sm:w-72 bg-white/95 backdrop-blur-xl shadow-2xl transform transition-all duration-500 ease-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:inset-0 border-r border-gray-200/50`}>
+      <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200/50">
         <Logo size="md" />
                 <Button
                   variant="ghost"
@@ -133,7 +133,7 @@ export default function Dashboard() {
                 </Button>
                 </div>
 
-      <nav className="p-4 space-y-2">
+      <nav className="p-3 sm:p-4 space-y-2">
         {navigationItems.map((item, index) => {
           const IconComponent = item.icon
           return (
@@ -143,7 +143,7 @@ export default function Dashboard() {
                 setActiveFeature(item.id === "dashboard" ? null : item.id)
                 setSidebarOpen(false)
               }}
-              className={`w-full flex items-center space-x-3 p-4 rounded-xl transition-all duration-300 ease-out transform hover:scale-105 ${
+              className={`w-full flex items-center space-x-2 sm:space-x-3 p-3 sm:p-4 rounded-xl transition-all duration-300 ease-out transform hover:scale-105 ${
                 item.active
                   ? `${item.gradient} ${item.color} border-l-4 border-l-current shadow-lg`
                   : 'text-gray-600 hover:bg-gray-50/80 hover:text-gray-900 hover:shadow-md'
@@ -153,16 +153,16 @@ export default function Dashboard() {
               <div className={`p-2 rounded-lg transition-all duration-300 ${item.active ? 'bg-white/20 shadow-md' : 'bg-gray-100'}`}>
                 <IconComponent className="h-5 w-5" />
               </div>
-              <div className="text-left">
-                <p className="font-semibold text-sm">{item.title}</p>
-                <p className="text-xs text-gray-500">{item.description}</p>
+              <div className="text-left min-w-0 flex-1">
+                <p className="font-semibold text-sm truncate">{item.title}</p>
+                <p className="text-xs text-gray-500 hidden sm:block">{item.description}</p>
               </div>
             </button>
           )
         })}
       </nav>
 
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200/50">
+      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 border-t border-gray-200/50">
         <AuthButtons variant="sidebar" />
       </div>
     </div>
@@ -170,7 +170,7 @@ export default function Dashboard() {
 
   const Header = () => (
     <header className="bg-white/95 backdrop-blur-xl border-b border-gray-200/50 lg:border-l lg:border-l-gray-200/50 shadow-sm">
-      <div className="flex items-center justify-between p-6">
+      <div className="flex items-center justify-between p-4 sm:p-6">
         <div className="flex items-center space-x-4">
           <Button
             variant="ghost"
@@ -195,23 +195,23 @@ export default function Dashboard() {
             </>
           )}
           
-          <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent truncate">
               {activeFeature ? navigationItems.find(item => item.id === activeFeature)?.title : 'Bản đồ chỉ đường'}
             </h1>
-            <p className="text-sm text-gray-500 font-medium">
+            <p className="text-xs sm:text-sm text-gray-500 font-medium hidden sm:block">
               {activeFeature ? navigationItems.find(item => item.id === activeFeature)?.description : 'Tìm tuyến đường tối ưu với hệ thống thông minh'}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <Button variant="ghost" size="sm" className="relative hover:bg-gray-100/50 rounded-full transition-all duration-300">
             <Bell className="h-5 w-5" />
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse"></span>
           </Button>
           
-          <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50 rounded-full shadow-sm border border-yellow-200/50">
+          <div className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50 rounded-full shadow-sm border border-yellow-200/50">
             <Award className="h-4 w-4 text-yellow-600" />
             <span className="text-sm font-bold text-yellow-800">{userScore}</span>
           </div>
@@ -231,7 +231,7 @@ export default function Dashboard() {
         <div className="flex-1 flex flex-col lg:ml-0">
           <Header />
 
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-3 sm:p-6">
             <div className="max-w-7xl mx-auto animate-in slide-in-from-bottom-4 duration-500">
           {activeFeature === "route-optimizer" && <RouteOptimizer />}
           {activeFeature === "customer-manager" && <CustomerManager />}
@@ -269,14 +269,14 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col lg:ml-0">
         <Header />
         
-        <main className="flex-1 p-6">
-          <div className="max-w-7xl mx-auto space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+        <main className="flex-1 p-3 sm:p-6">
+                      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 animate-in slide-in-from-bottom-4 duration-500">
             <QuickStats userScore={userScore} />
 
             {/* Main Map Section */}
-            <div className={`grid gap-6 ${mapExpanded ? 'grid-cols-1' : 'grid-cols-1 xl:grid-cols-4'}`}>
+            <div className={`grid gap-4 sm:gap-6 ${mapExpanded ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-4'}`}>
               {/* Map - Takes most space */}
-              <div className={`${mapExpanded ? 'xl:col-span-1' : 'xl:col-span-3'}`}>
+              <div className={`${mapExpanded ? 'lg:col-span-1' : 'lg:col-span-3'}`}>
                 <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm overflow-hidden">
                   <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 via-green-50 to-emerald-50 border-b border-gray-200/50">
                     <div className="flex items-center justify-between">
@@ -320,7 +320,7 @@ export default function Dashboard() {
               </div>
 
               {/* Controls Sidebar */}
-              <div className={`${mapExpanded ? 'xl:col-span-1' : 'xl:col-span-1'} space-y-6`}>
+              <div className={`${mapExpanded ? 'lg:col-span-1' : 'lg:col-span-1'} space-y-4 sm:space-y-6`}>
                 {/* Address Search */}
                 <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
                   <CardHeader className="pb-4 bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border-b border-gray-200/50">
@@ -351,7 +351,7 @@ export default function Dashboard() {
 
             {/* Route Details - Show when route data exists */}
             {routeData && !mapExpanded && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in slide-in-from-bottom-4 duration-500">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 animate-in slide-in-from-bottom-4 duration-500">
             <RouteStats 
               routeData={routeData}
               vehicle={routeParams.vehicle}
@@ -367,7 +367,7 @@ export default function Dashboard() {
         
             {/* Info Cards - Only show when not expanded */}
             {!mapExpanded && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in slide-in-from-bottom-4 duration-500">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 animate-in slide-in-from-bottom-4 duration-500">
           <SSRFixInfo />
           <HooksFixInfo />
           <AddressSearchInfo />

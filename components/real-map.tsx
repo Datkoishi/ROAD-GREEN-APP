@@ -65,7 +65,7 @@ interface VietMapResponse {
   paths: RoutePath[]
 }
 
-// Decode polyline từ VietMap API
+// Decode polyline từ API
 function decodePolyline(encoded: string): [number, number][] {
   const poly: [number, number][] = []
   let index = 0
@@ -174,7 +174,7 @@ export default function RealMap({
       const result = await response.json()
       
       if (!result.success) {
-        throw new Error(result.error || "Lỗi từ VietMap API")
+        throw new Error(result.error || "Lỗi từ API")
       }
       
       setRouteData(result.data)
@@ -233,7 +233,7 @@ export default function RealMap({
 
   if (loading) {
     return (
-      <div className={`bg-gradient-to-br from-blue-50 to-green-50 rounded-lg flex items-center justify-center ${className || 'h-96'}`}>
+      <div className={`bg-gradient-to-br from-blue-50 to-green-50 rounded-lg flex items-center justify-center ${className || 'h-64 sm:h-96'}`}>
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
           <p className="text-gray-600 font-medium">Đang tải bản đồ VietMap...</p>
@@ -245,7 +245,7 @@ export default function RealMap({
 
   if (error) {
     return (
-      <div className={`bg-gradient-to-br from-red-50 to-orange-50 rounded-lg flex items-center justify-center ${className || 'h-96'}`}>
+      <div className={`bg-gradient-to-br from-red-50 to-orange-50 rounded-lg flex items-center justify-center ${className || 'h-64 sm:h-96'}`}>
         <div className="text-center">
           <AlertCircle className="h-8 w-8 text-red-600 mx-auto mb-4" />
           <p className="text-red-600 font-medium mb-2">{error}</p>
@@ -262,7 +262,7 @@ export default function RealMap({
 
   if (!routeData || !routeData.paths || routeData.paths.length === 0) {
     return (
-      <div className={`bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg flex items-center justify-center ${className || 'h-96'}`}>
+      <div className={`bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg flex items-center justify-center ${className || 'h-64 sm:h-96'}`}>
         <div className="text-center">
           <MapPin className="h-8 w-8 text-gray-600 mx-auto mb-4" />
           <p className="text-gray-600 font-medium">Không tìm thấy tuyến đường</p>
@@ -282,14 +282,14 @@ export default function RealMap({
   const endIcon = L ? createCustomIcon('#EF4444', L) : null   // Red
 
   return (
-    <div className={`relative ${className || 'h-96'}`}>
+    <div className={`relative ${className || 'h-64 sm:h-96'}`}>
         {/* Route Selection */}
         {routeData.paths.length > 1 && (
-        <div className="absolute top-4 left-4 z-10 flex space-x-2 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-lg">
+        <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-10 flex space-x-1 sm:space-x-2 bg-white/90 backdrop-blur-sm rounded-lg p-1 sm:p-2 shadow-lg">
             {routeData.paths.map((path, index) => (
               <button
                 key={index}
-              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                              className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium transition-colors ${
                   selectedRoute === index 
                     ? 'bg-blue-600 text-white' 
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -383,9 +383,9 @@ export default function RealMap({
           </MapContainer>
 
       {/* Route Info Overlay */}
-      <div className="absolute bottom-4 left-4 right-4 z-10">
-        <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg">
-          <div className="grid grid-cols-3 gap-4 text-center">
+      <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 z-10">
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 sm:p-4 shadow-lg">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
             <div>
               <div className="flex items-center justify-center space-x-1 mb-1">
                 <Navigation className="h-4 w-4 text-blue-600" />

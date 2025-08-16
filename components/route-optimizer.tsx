@@ -48,7 +48,7 @@ export default function RouteOptimizer() {
     // Simulate route optimization algorithm
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    // Simple optimization simulation - in reality this would use VietMap API and routing algorithms
+    // Simple optimization simulation - in reality this would use routing algorithms
     const shuffled = [...orders].sort(() => Math.random() - 0.5)
     setOptimizedRoute(shuffled)
     setIsOptimizing(false)
